@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klinik Budiman V4 — BPH & Erectile Dysfunction</title>
+<style>
+:root{
+  --primary:#0b6b68;--primary-dark:#075451;--secondary:#e9f5f4;
+  --dark:#173b3a;--border:#d5e2e1;--danger:#b42318;--danger-bg:#fff0ee;
+  --muted:#667085;--white:#fff;--success:#067647;--success-bg:#ecfdf3;
+  --warning:#b54708;--warning-bg:#fffaeb;--bg:#f5f8f8;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:#1d2939;line-height:1.5}
+header{background:linear-gradient(135deg,var(--primary),#0d817d);color:#fff;padding:22px 20px;position:sticky;top:0;z-index:20;box-shadow:0 2px 12px #0002}
+.wrap{max-width:1220px;margin:auto}.brand{font-size:28px;font-weight:800}.subtitle{opacity:.92;margin-top:3px}
+nav{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px}
+nav button{border:0;padding:9px 13px;border-radius:9px;background:#ffffff22;color:#fff;cursor:pointer;font-weight:650}
+nav button.active{background:#fff;color:var(--primary)}
+main{padding:24px 20px 60px}.section{display:none}.section.active{display:block}
+.card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 2px 8px #173b3a08}
+h2{color:var(--dark);margin:0 0 14px}h3{color:var(--dark)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+label{font-weight:650;font-size:14px;display:block;margin-bottom:6px}
+input,select,textarea{width:100%;border:1px solid #cbd5d5;border-radius:9px;padding:10px 11px;font:inherit;background:#fff}
+textarea{min-height:90px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid #0b6b6830;border-color:var(--primary)}
+.question{border:1px solid var(--border);border-radius:12px;padding:15px;margin:10px 0;background:#fbfdfd}
+.question p{margin:0 0 10px;font-weight:650}.options{display:flex;gap:8px;flex-wrap:wrap}
+.options label{font-weight:500;background:#f1f6f6;border-radius:8px;padding:7px 9px;cursor:pointer}
+.options input{width:auto;margin-right:5px}
+.score{font-size:18px;font-weight:800;color:var(--primary);background:var(--secondary);padding:12px;border-radius:10px;margin-top:12px}
+.btn{border:0;border-radius:9px;padding:10px 15px;cursor:pointer;font-weight:700}
+.primary{background:var(--primary);color:#fff}.primary:hover{background:var(--primary-dark)}
+.secondary{background:#eef4f4;color:var(--dark)}.danger{background:var(--danger-bg);color:var(--danger)}
+.success{background:var(--success-bg);color:var(--success)}.warning{background:var(--warning-bg);color:var(--warning)}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}th{background:#f4f8f8}
+.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef4f4;font-size:12px;font-weight:750}
+.notice{padding:12px 14px;border-left:4px solid var(--primary);background:#eff8f7;border-radius:6px;margin-bottom:14px}
+.small{font-size:12px;color:var(--muted)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.toolbar>div{flex:1;min-width:180px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px}.kpi strong{display:block;font-size:24px;color:var(--primary)}
+.patient-row{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.timeline{position:relative;margin-top:20px}.timeline:before{content:"";position:absolute;left:15px;top:0;bottom:0;width:2px;background:var(--border)}
+.note-item{position:relative;margin-left:42px;margin-bottom:17px;border:1px solid var(--border);border-radius:12px;padding:16px;background:#fff}
+.note-item:before{content:"";position:absolute;left:-34px;top:18px;width:12px;height:12px;border-radius:50%;background:var(--primary);border:3px solid #fff;box-shadow:0 0 0 2px var(--primary)}
+.note-header{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.note-meta{display:flex;flex-direction:column;gap:2px}
+.note-date{font-size:12px;color:var(--muted)}.note-doctor{font-size:13px;font-weight:650;color:var(--dark)}
+.note-content{white-space:pre-wrap;line-height:1.65;margin:12px 0}.note-actions{display:flex;gap:8px;flex-wrap:wrap}
+.note-actions .btn{padding:7px 10px;font-size:12px}
+.note-type{display:inline-block;padding:5px 10px;border-radius:999px;background:var(--secondary);color:var(--primary);font-size:12px;font-weight:800}
+.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:10px}
+.modal{display:none;position:fixed;inset:0;background:#0007;z-index:50;padding:20px;overflow:auto}.modal.show{display:flex;align-items:flex-start;justify-content:center}
+.modal-box{background:#fff;border-radius:14px;max-width:900px;width:100%;padding:20px;margin-top:30px}.modal-head{display:flex;justify-content:space-between;align-items:center}
+.status{position:fixed;right:18px;bottom:18px;background:#fff;border:1px solid var(--border);padding:10px 14px;border-radius:10px;box-shadow:0 4px 15px #0002;display:none;z-index:100}.status.show{display:block}
+.print-title{display:none}
+@media(max-width:800px){.grid,.grid3{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}header{position:static}}
+@media print{
+ header,.actions,.no-print,.status,.modal{display:none!important}main{padding:0}.section{display:block!important}
+ .card{box-shadow:none;break-inside:avoid}.print-title{display:block}.note-item{break-inside:avoid}
+ .timeline:before,.note-item:before{display:none}.note-item{margin-left:0}
+}
+
+.hidden{display:none!important}
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
+.login-card{width:100%;max-width:430px;background:#fff;border:1px solid var(--border);border-radius:18px;padding:28px;box-shadow:0 12px 40px #173b3a12}
+.userbar{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-top:12px;font-size:13px}
+.userbar .btn{padding:7px 10px}
+code{background:#f1f5f5;padding:2px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="brand">Klinik Budiman</div>
+    <div class="subtitle">Secure Clinical Record System</div>
+    <h2>Log masuk</h2>
+    <label>Username</label><input id="loginUser" autocomplete="username" placeholder="Username">
+    <label style="margin-top:12px">Kata laluan</label><input id="loginPass" type="password" autocomplete="current-password" placeholder="Password">
+    <button class="btn primary" style="width:100%;margin-top:16px" onclick="loginUser()">Log Masuk</button>
+    <div class="notice" style="margin-top:14px">
+      <b>Demo mode</b><br><span class="small">admin / admin123 atau doctor / doctor123</span>
+    </div>
+    <div class="small">Untuk penggunaan klinikal sebenar, sambungkan backend HTTPS dan gunakan authentication server-side.</div>
+  </div>
+</div>
+
+<div id="appShell" class="hidden">
+
+<header>
+<div class="wrap">
+<div class="brand">Klinik Budiman V5 — Complete Web Clinical System</div>
+<div class="subtitle">Complete web clinical record system — BPH & Erectile Dysfunction</div>
+<nav>
+<button class="tab active" data-tab="dashboard">🏠 Dashboard</button>
+<button class="tab" data-tab="s1">1. Demografi</button>
+<button class="tab" data-tab="s2">2. Saringan</button>
+<button class="tab" data-tab="s3">3. Pemeriksaan</button>
+<button class="tab" data-tab="s4">4. Diagnosis & Rawatan</button>
+<button class="tab" data-tab="s5">5. Nota Klinikal</button>
+<button class="tab" data-tab="s6">6. Rekod Pesakit</button>
+</nav>
+</div>
+</header>
+
+<main class="wrap">
+<section id="dashboard" class="section">
+  <div class="card">
+    <div class="patient-row">
+      <div><h2 style="margin:0">Dashboard</h2><div class="small">Ringkasan sistem Klinik Budiman</div></div>
+      <div class="actions" style="margin:0"><button class="btn primary" onclick="newPatient()">＋ Pesakit Baharu</button><button class="btn secondary" onclick="showTab('s6')">📋 Rekod Pesakit</button></div>
+    </div>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi"><span class="small">Pesakit</span><strong id="dashPatients">0</strong></div>
+    <div class="kpi"><span class="small">Lawatan</span><strong id="dashVisits">0</strong></div>
+    <div class="kpi"><span class="small">Nota klinikal</span><strong id="dashNotes">0</strong></div>
+    <div class="kpi"><span class="small">Lawatan terakhir</span><strong id="dashLast" style="font-size:16px">—</strong></div>
+  </div>
+  <div class="card"><h2>Lawatan terkini</h2><table><thead><tr><th>Tarikh</th><th>Pesakit</th><th>Doktor</th></tr></thead><tbody id="recentVisits"></tbody></table></div>
+  <div class="card"><h2>System & Security</h2>
+    <div class="notice"><b>Architecture:</b> <span id="architectureStatus">Web database ready</span><br>
+    <span class="small">Data klinikal produksi hendaklah menggunakan HTTPS, server-side authentication, role-based access, audit logging, encrypted database/backup dan polisi retention yang sesuai.</span></div>
+    <div class="actions"><button class="btn secondary" onclick="exportDatabase()">⬇️ Backup JSON</button><button class="btn secondary" onclick="document.getElementById('importFile').click()">⬆️ Import JSON</button><button class="btn danger" onclick="logoutUser()">Log Keluar</button></div>
+  </div>
+</section>
+
+<div class="print-title"><h1>Klinik Budiman V5</h1><p>Rekod klinikal — BPH & Erectile Dysfunction</p></div>
+
+<section id="s1" class="section active">
+<div class="card">
+<h2>Bahagian 1 — Demografi Pesakit & Masalah Kesihatan</h2>
+<div class="notice">Lengkapkan maklumat pesakit. MRN/ID digunakan sebagai kunci carian rekod dalam prototaip ini.</div>
+<div class="grid">
+<div><label>Nama pesakit</label><input id="name"></div>
+<div><label>No. MRN / ID pesakit</label><input id="mrn"></div>
+<div><label>Tarikh lahir</label><input id="dob" type="date"></div>
+<div><label>Umur</label><input id="age" type="number" min="0"></div>
+<div><label>Jantina</label><select id="sex"><option value="">Pilih</option><option>Lelaki</option></select></div>
+<div><label>No. telefon</label><input id="phone"></div>
+<div><label>Tarikh lawatan</label><input id="visitDate" type="date"></div>
+<div><label>Doktor / pegawai perubatan</label><input id="doctor"></div>
+</div>
+</div>
+<div class="card">
+<h2>Masalah kesihatan utama</h2>
+<div class="grid">
+<div><label>Aduan utama</label><textarea id="chief"></textarea></div>
+<div><label>Tempoh simptom</label><textarea id="duration" placeholder="Contoh: 8 bulan"></textarea></div>
+<div><label>Gejala berkaitan BPH/LUTS</label><textarea id="bphSymptoms" placeholder="Frequency, urgency, weak stream, hesitancy, nocturia..."></textarea></div>
+<div><label>Isu fungsi ereksi</label><textarea id="edSymptoms" placeholder="Kesukaran mencapai/mengekalkan ereksi, libido, morning erection..."></textarea></div>
+<div><label>Komorbiditi</label><textarea id="comorb" placeholder="Contoh: diabetes, hipertensi, dyslipidaemia, CVD..."></textarea></div>
+<div><label>Ubat semasa & alahan</label><textarea id="meds"></textarea></div>
+</div>
+</div>
+<div class="actions"><button class="btn primary" onclick="showTab('s2')">Seterusnya →</button></div>
+</section>
+
+<section id="s2" class="section">
+<div class="card"><h2>Bahagian 2 — Saringan IIEF-5 & IPSS</h2><div class="notice"><b>Nota:</b> Skor ialah alat saringan/penilaian dan tidak menggantikan penilaian klinikal. Gunakan versi soal selidik yang diluluskan institusi jika diperlukan untuk rekod rasmi.</div></div>
+<div class="card">
+<h2>IIEF-5</h2><p class="small">Dalam 6 bulan yang lalu. Pilih satu jawapan bagi setiap soalan.</p>
+<div id="iief"></div>
+<div class="score">Jumlah IIEF-5: <span id="iiefScore">0 / 25</span> — <span id="iiefInterpretation">Belum lengkap</span></div>
+</div>
+<div class="card">
+<h2>IPSS</h2><p class="small">Dalam 1 bulan yang lalu. Soalan 1–7 masing-masing 0–5.</p>
+<div id="ipss"></div>
+<div class="score">Jumlah IPSS: <span id="ipssScore">0 / 35</span> — <span id="ipssInterpretation">Belum lengkap</span></div>
+<div class="question"><p>8. Jika anda menghabiskan sepanjang hayat dengan keadaan kencing anda sekarang, bagaimana perasaan anda?</p><div class="options" id="qol"></div></div>
+<div class="score">Quality of Life (QoL): <span id="qolScore">—</span> / 6 — <span id="qolInterpretation">Belum dipilih</span></div>
+</div>
+<div class="actions"><button class="btn secondary" onclick="showTab('s1')">← Kembali</button><button class="btn primary" onclick="showTab('s3')">Seterusnya →</button></div>
+</section>
+
+<section id="s3" class="section">
+<div class="card"><h2>Bahagian 3 — Pemeriksaan Fizikal</h2>
+<div class="grid grid3">
+<div><label>BP (mmHg)</label><input id="bp"></div><div><label>Nadi (bpm)</label><input id="pulse"></div><div><label>BMI (kg/m²)</label><input id="bmi"></div>
+<div><label>Abdomen</label><textarea id="abdomen"></textarea></div><div><label>Genitalia</label><textarea id="genital"></textarea></div><div><label>DRE / prostat</label><textarea id="dre" placeholder="Saiz, konsistensi, nodul, tenderness..."></textarea></div>
+<div><label>Pemeriksaan neurologi ringkas</label><textarea id="neuro"></textarea></div><div><label>Vascular / peripheral pulses</label><textarea id="vascular"></textarea></div><div><label>Lain-lain</label><textarea id="otherExam"></textarea></div>
+</div></div>
+<div class="card"><h2>Keputusan darah</h2><div class="grid grid3">
+<div><label>PSA</label><input id="psa"></div><div><label>Creatinine / eGFR</label><input id="renal"></div><div><label>Urinalysis</label><input id="urine"></div>
+<div><label>FBC</label><input id="fbc"></div><div><label>HbA1c / Glucose</label><input id="glucose"></div><div><label>Lipid profile</label><input id="lipid"></div>
+</div><label style="margin-top:14px">Ujian lain / komen</label><textarea id="bloodOther"></textarea></div>
+<div class="card"><h2>Ultrasound / Imaging</h2><div class="grid">
+<div><label>Ultrasound KUB / prostate</label><textarea id="us"></textarea></div><div><label>Post-void residual (PVR)</label><input id="pvr"></div>
+<div><label>Prostate volume</label><input id="prostateVol"></div><div><label>Bladder / upper tract findings</label><textarea id="bladder"></textarea></div>
+</div></div>
+<div class="actions"><button class="btn secondary" onclick="showTab('s2')">← Kembali</button><button class="btn primary" onclick="showTab('s4')">Seterusnya →</button></div>
+</section>
+
+<section id="s4" class="section">
+<div class="card"><h2>Bahagian 4 — Diagnosis & Pelan Rawatan</h2><div class="notice">Dokumentasi keputusan klinikal. Diagnosis akhir, ubat, dos, kontraindikasi dan rujukan hendaklah ditentukan oleh pengamal perubatan.</div>
+<div class="grid">
+<div><label>Diagnosis utama</label><textarea id="diagnosis"></textarea></div><div><label>Diagnosis tambahan / differential</label><textarea id="differential"></textarea></div>
+<div><label>Pelan rawatan BPH/LUTS</label><textarea id="bphPlan"></textarea></div><div><label>Pelan rawatan ED</label><textarea id="edPlan"></textarea></div>
+<div><label>Nasihat & pendidikan pesakit</label><textarea id="education"></textarea></div><div><label>Pelan susulan / rujukan</label><textarea id="followup"></textarea></div>
+</div></div>
+<div class="card"><h2>Ringkasan skor</h2><table><thead><tr><th>Instrumen</th><th>Skor</th><th>Interpretasi</th></tr></thead><tbody>
+<tr><td>IIEF-5</td><td id="sumIief">—</td><td id="sumIiefInt">—</td></tr>
+<tr><td>IPSS</td><td id="sumIpps">—</td><td id="sumIppsInt">—</td></tr>
+<tr><td>IPSS QoL</td><td id="sumQol">—</td><td id="sumQolInt">—</td></tr>
+</tbody></table></div>
+<div class="actions"><button class="btn secondary" onclick="showTab('s3')">← Kembali</button><button class="btn primary" onclick="showTab('s5')">Ke Nota Klinikal →</button></div>
+</section>
+
+<section id="s5" class="section">
+<div class="card"><h2>Bahagian 5 — Clinical Notes Timeline</h2>
+<div class="notice">Setiap nota direkodkan dengan jenis nota, tarikh, masa dan doktor/pegawai. Nota boleh diedit atau dipadam.</div>
+<div class="grid">
+<div><label>Jenis Nota</label><select id="noteType">
+<option>Clinical Review</option><option>Medication</option><option>Investigation</option><option>Follow-up</option><option>Patient Counselling</option><option>Referral</option><option>General Note</option>
+</select></div>
+<div><label>Doktor / Pegawai</label><input id="noteDoctor"></div>
+</div>
+<div style="margin-top:14px"><label>Nota klinikal</label><textarea id="newNote" style="min-height:140px" placeholder="Masukkan nota klinikal..."></textarea></div>
+<div class="actions"><button class="btn primary" onclick="addNote()">+ Tambah Nota</button><button class="btn secondary" onclick="clearNoteInput()">Kosongkan</button></div>
+</div>
+<div class="card"><div class="patient-row"><h2 style="margin:0">Timeline</h2><span class="badge"><span id="noteCount">0</span> nota</span></div><div id="notesList" class="timeline"></div></div>
+<div class="actions"><button class="btn secondary" onclick="showTab('s4')">← Kembali</button><button class="btn primary" onclick="saveVisit()">💾 Simpan Lawatan</button><button class="btn secondary" onclick="window.print()">🖨️ Cetak / PDF</button></div>
+</section>
+
+<section id="s6" class="section">
+<div class="card">
+<h2>Web Database Status</h2>
+<div class="notice"><b>Status:</b> <span id="dbStatus">Belum dikonfigurasi</span><br>
+<span class="small">Tetapkan API_BASE_URL dalam JavaScript kepada URL HTTPS backend.</span></div>
+</div>
+<div class="card"><h2>Bahagian 6 — Rekod Pesakit</h2>
+<div class="notice">Carian dan sejarah lawatan direka untuk disimpan pada database web berpusat. Gunakan HTTPS dan login sebelum data pesakit sebenar dimasukkan.</div>
+<div class="toolbar">
+<div><label>Cari MRN / Nama</label><input id="patientSearch" oninput="renderPatientList()" placeholder="Taip nama atau MRN..."></div>
+<div><button class="btn primary" onclick="newPatient()">＋ Pesakit Baharu</button></div>
+<div><button class="btn secondary" onclick="exportDatabase()">⬇️ Export Database</button></div>
+<div><button class="btn secondary" onclick="document.getElementById('importFile').click()">⬆️ Import Database</button><input id="importFile" type="file" accept=".json" class="hidden" onchange="importDatabase(event)"></div>
+</div>
+</div>
+<div class="kpi-grid">
+<div class="kpi"><span class="small">Pesakit</span><strong id="kpiPatients">0</strong></div>
+<div class="kpi"><span class="small">Jumlah lawatan</span><strong id="kpiVisits">0</strong></div>
+<div class="kpi"><span class="small">Nota klinikal</span><strong id="kpiNotes">0</strong></div>
+<div class="kpi"><span class="small">Lawatan terakhir</span><strong id="kpiLast" style="font-size:16px">—</strong></div>
+</div>
+<div class="card"><h2>Senarai Pesakit</h2><div id="patientList"></div></div>
+</section>
+</main>
+
+<div id="patientModal" class="modal">
+<div class="modal-box">
+<div class="modal-head"><h2 id="modalTitle">Sejarah Pesakit</h2><button class="btn secondary" onclick="closeModal()">Tutup</button></div>
+<div id="patientHistory"></div>
+</div>
+</div>
+
+<div id="status" class="status"></div>
+
+<script>
+const iiefQs=[
+"1. Sejauh mana keyakinan anda bahawa anda boleh mendapatkan dan mengekalkan ereksi?",
+"2. Apabila anda mengalami ereksi dengan rangsangan seksual, berapa kerap ereksi anda cukup keras untuk penetrasi?",
+"3. Semasa hubungan seksual, berapa kerap anda mampu mengekalkan ereksi selepas penetrasi?",
+"4. Semasa hubungan seksual, berapa sukar untuk mengekalkan ereksi sehingga selesai?",
+"5. Apabila anda cuba melakukan hubungan seksual, berapa kerap ia memuaskan anda?"
+];
+const iiefOpts=[["1","Sangat rendah"],["2","Rendah"],["3","Sederhana"],["4","Tinggi"],["5","Sangat tinggi"]];
+const ipssQs=[
+"1. Dalam tempoh 1 bulan yang lalu, berapa kerap anda rasa pundi kencing masih penuh selepas selesai kencing?",
+"2. Berapa kerap anda perlu kencing semula dalam masa kurang daripada 2 jam selepas kali terakhir kencing?",
+"3. Berapa kerap anda berhenti dan mula semula beberapa kali ketika kencing?",
+"4. Berapa kerap anda mendapati sukar untuk menangguhkan kencing?",
+"5. Berapa kerap anda mempunyai aliran kencing yang lemah?",
+"6. Berapa kerap anda perlu meneran untuk mula kencing?",
+"7. Dalam tempoh 1 bulan yang lalu, berapa kali biasanya anda bangun untuk kencing dari waktu tidur hingga bangun pagi?"
+];
+const ipssLabels=["0 — Tidak pernah","1 — Kurang daripada 1 dalam 5 kali","2 — Kurang daripada separuh masa","3 — Kira-kira separuh masa","4 — Lebih daripada separuh masa","5 — Hampir selalu"];
+const qolLabels=["0 — Sangat gembira","1 — Gembira","2 — Kebanyakannya berpuas hati","3 — Campuran: sama puas/tidak puas","4 — Kebanyakannya tidak berpuas hati","5 — Tidak gembira","6 — Sangat teruk"];
+
+let additionalNotes=[];
+let database=[];
+let editingVisitId=null;
+let currentUser=null;
+let auditLog=[];
+
+/* =========================
+   KLINIK BUDIMAN V5
+   COMPLETE WEB APP CORE
+   =========================
+   Set API_BASE_URL to your HTTPS backend for production.
+   With DEMO_MODE=true, records are stored locally for testing only.
+*/
+const API_BASE_URL="https://YOUR-DOMAIN.example/api";
+const DEMO_MODE=API_BASE_URL.includes("YOUR-DOMAIN");
+const APP_VERSION="5.0";
+
+const demoUsers=[
+  {username:"admin",password:"admin123",role:"Admin",name:"Administrator"},
+  {username:"doctor",password:"doctor123",role:"Clinician",name:"Medical Officer"}
+];
+
+async function apiRequest(path,options={}){
+  if(DEMO_MODE) throw new Error("DEMO_MODE");
+  const response=await fetch(API_BASE_URL+path,{
+    ...options,
+    headers:{"Content-Type":"application/json",...(options.headers||{})},
+    credentials:"include"
+  });
+  if(!response.ok) throw new Error(await response.text()||`HTTP ${response.status}`);
+  const ct=response.headers.get("content-type")||"";
+  return ct.includes("application/json")?response.json():null;
+}
+
+function localDBLoad(){
+  try{
+    database=JSON.parse(localStorage.getItem("KB5_DATABASE")||"[]");
+    auditLog=JSON.parse(localStorage.getItem("KB5_AUDIT")||"[]");
+  }catch(e){database=[];auditLog=[]}
+}
+function localDBSave(){
+  localStorage.setItem("KB5_DATABASE",JSON.stringify(database));
+  localStorage.setItem("KB5_AUDIT",JSON.stringify(auditLog));
+}
+async function refreshDatabase(){
+  if(DEMO_MODE){localDBLoad();renderPatientList();return}
+  try{
+    database=await apiRequest("/patients");
+    renderPatientList();
+  }catch(err){
+    console.error(err); showStatus("⚠️ Database web tidak dapat dicapai.");
+  }
+}
+function addAudit(action,detail){
+  const row={id:Date.now(),at:new Date().toISOString(),user:currentUser?.name||"Unknown",role:currentUser?.role||"",action,detail};
+  auditLog.unshift(row);
+  if(DEMO_MODE)localDBSave();
+}
+function showStatus(m){
+  const s=document.getElementById("status");s.textContent=m;s.classList.add("show");
+  setTimeout(()=>s.classList.remove("show"),2600);
+}
+function patientKey(mrn,name){
+  return (mrn||"").trim().toLowerCase()||("name:"+name.trim().toLowerCase());
+}
+
+async function loginUser(){
+  const u=document.getElementById("loginUser").value.trim();
+  const p=document.getElementById("loginPass").value;
+  if(!u||!p){alert("Sila masukkan username dan kata laluan.");return}
+  if(DEMO_MODE){
+    const found=demoUsers.find(x=>x.username===u&&x.password===p);
+    if(!found){alert("Login gagal.");return}
+    currentUser={username:found.username,role:found.role,name:found.name};
+  }else{
+    try{
+      currentUser=await apiRequest("/auth/login",{method:"POST",body:JSON.stringify({username:u,password:p})});
+    }catch(e){alert("Login gagal atau server tidak dapat dicapai.");return}
+  }
+  sessionStorage.setItem("KB5_SESSION",JSON.stringify(currentUser));
+  document.getElementById("loginScreen").classList.add("hidden");
+  document.getElementById("appShell").classList.remove("hidden");
+  document.getElementById("currentUser").textContent=`${currentUser.name} · ${currentUser.role}`;
+  addAudit("LOGIN","User logged in");
+  await refreshDatabase();
+  updateDashboard();
+}
+function logoutUser(){
+  addAudit("LOGOUT","User logged out");
+  sessionStorage.removeItem("KB5_SESSION");
+  currentUser=null;
+  if(!DEMO_MODE) fetch(API_BASE_URL+"/auth/logout",{method:"POST",credentials:"include"}).catch(()=>{});
+  document.getElementById("appShell").classList.add("hidden");
+  document.getElementById("loginScreen").classList.remove("hidden");
+}
+function restoreSession(){
+  try{currentUser=JSON.parse(sessionStorage.getItem("KB5_SESSION")||"null")}catch(e){currentUser=null}
+  if(currentUser){
+    document.getElementById("loginScreen").classList.add("hidden");
+    document.getElementById("appShell").classList.remove("hidden");
+    document.getElementById("currentUser").textContent=`${currentUser.name} · ${currentUser.role}`;
+  }
+}
+
+async function saveVisit(){
+  const d=getFormData(),mrn=d.mrn?.trim(),name=d.name?.trim();
+  if(!name&&!mrn){alert("Sila masukkan sekurang-kurangnya Nama pesakit atau MRN/ID.");showTab("s1");return}
+  const key=patientKey(mrn,name);
+  const payload={
+    key,patientId:mrn||null,name:name||"Tanpa nama",mrn:mrn||"",
+    phone:d.phone||"",dob:d.dob||"",
+    visit:{id:editingVisitId||null,date:d.visitDate||new Date().toISOString().slice(0,10),doctor:d.doctor||currentUser?.name||"",data:d}
+  };
+  try{
+    if(DEMO_MODE){
+      let p=database.find(x=>x.key===key);
+      if(!p){p={key,patientId:payload.patientId||("P"+Date.now()),name:payload.name,mrn:payload.mrn,phone:payload.phone,dob:payload.dob,visits:[]};database.push(p)}
+      else{p.name=payload.name;p.mrn=payload.mrn;p.phone=payload.phone;p.dob=payload.dob}
+      const visit={id:editingVisitId||("V"+Date.now()),date:payload.visit.date,doctor:payload.visit.doctor,data:d,savedAt:new Date().toISOString()};
+      const ix=p.visits.findIndex(v=>v.id===visit.id);
+      if(ix>=0)p.visits[ix]=visit;else p.visits.push(visit);
+      localDBSave();
+    }else{
+      await apiRequest("/visits",{method:"POST",body:JSON.stringify(payload)});
+    }
+    addAudit(editingVisitId?"UPDATE_VISIT":"CREATE_VISIT",`${name||mrn} · ${payload.visit.date}`);
+    editingVisitId=null;await refreshDatabase();updateDashboard();
+    showStatus("✓ Lawatan berjaya disimpan.");
+  }catch(err){console.error(err);alert("Gagal menyimpan lawatan.")}
+}
+async function loadVisit(key,visitId){
+  try{
+    const p=DEMO_MODE?database.find(x=>x.key===key):await apiRequest("/patients/"+encodeURIComponent(key));
+    if(!p)return;const v=p.visits.find(x=>x.id===visitId);if(!v)return;
+    editingVisitId=v.id;setFormData(v.data);showTab("s1");showStatus("✓ Rekod lawatan dimuatkan.");
+  }catch(e){alert("Gagal memuatkan rekod.")}
+}
+async function deletePatient(key){
+  const p=database.find(x=>x.key===key);if(!p)return;
+  if(!confirm(`Padam semua rekod untuk ${p.name}? Tindakan ini tidak boleh dibuat asal.`))return;
+  try{
+    if(DEMO_MODE){database=database.filter(x=>x.key!==key);localDBSave()}
+    else await apiRequest("/patients/"+encodeURIComponent(key),{method:"DELETE"});
+    addAudit("DELETE_PATIENT",p.name);await refreshDatabase();updateDashboard();showStatus("✓ Rekod dipadam.");
+  }catch(e){alert("Gagal memadam rekod.")}
+}
+function exportDatabase(){
+  const payload={app:"Klinik Budiman",version:APP_VERSION,exportedAt:new Date().toISOString(),patients:database,auditLog};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="Klinik_Budiman_Backup.json";a.click();URL.revokeObjectURL(a.href);
+  addAudit("EXPORT","Database exported");
+}
+async function importDatabase(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=async()=>{
+    try{
+      const x=JSON.parse(reader.result),incoming=Array.isArray(x)?x:x.patients;
+      if(!Array.isArray(incoming))throw Error();
+      if(!confirm("Import akan menggantikan/menambah rekod bergantung pada backend. Teruskan?"))return;
+      if(DEMO_MODE){database=incoming;localDBSave()}
+      else await apiRequest("/import",{method:"POST",body:JSON.stringify({patients:incoming})});
+      addAudit("IMPORT","Database imported");await refreshDatabase();updateDashboard();showStatus("✓ Import berjaya.");
+    }catch(err){alert("Fail JSON tidak sah atau import gagal.")}
+    finally{e.target.value=""}
+  };reader.readAsText(file);
+}
+function updateDashboard(){
+  const visits=database.reduce((a,p)=>a+p.visits.length,0);
+  const notes=database.reduce((a,p)=>a+p.visits.reduce((b,v)=>b+(v.data.notes?.length||0),0),0);
+  document.getElementById("dashPatients").textContent=database.length;
+  document.getElementById("dashVisits").textContent=visits;
+  document.getElementById("dashNotes").textContent=notes;
+  document.getElementById("dashLast").textContent=database.flatMap(p=>p.visits.map(v=>v.date)).sort().pop()||"—";
+  const recent=database.flatMap(p=>p.visits.map(v=>({name:p.name,date:v.date,doctor:v.doctor}))).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);
+  document.getElementById("recentVisits").innerHTML=recent.length?recent.map(v=>`<tr><td>${esc(v.date)}</td><td>${esc(v.name)}</td><td>${esc(v.doctor||"—")}</td></tr>`).join(""):'<tr><td colspan="3">Tiada lawatan.</td></tr>';
+}
+function showDashboard(){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById("dashboard").classList.add("active");
+  document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+  updateDashboard();window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function esc(v){const d=document.createElement("div");d.textContent=v??"";return d.innerHTML}
+function showStatus(m){const s=document.getElementById("status");s.textContent=m;s.classList.add("show");setTimeout(()=>s.classList.remove("show"),2400)}
+function radioGroup(c,n,opts){c.innerHTML=opts.map((x,i)=>`<label><input type="radio" name="${n}" value="${x[0]??i}"> ${x[1]??x}</label>`).join("");c.querySelectorAll("input").forEach(e=>e.addEventListener("change",updateScores))}
+document.getElementById("iief").innerHTML=iiefQs.map((q,i)=>`<div class="question"><p>${q}</p><div class="options" id="iief${i}"></div></div>`).join("");
+iiefQs.forEach((_,i)=>radioGroup(document.getElementById("iief"+i),"iief"+i,iiefOpts));
+document.getElementById("ipss").innerHTML=ipssQs.map((q,i)=>`<div class="question"><p>${q}</p><div class="options" id="ipss${i}"></div></div>`).join("");
+ipssQs.forEach((_,i)=>radioGroup(document.getElementById("ipss"+i),"ipss"+i,ipssLabels.map((x,j)=>[j,x])));
+radioGroup(document.getElementById("qol"),"qol",qolLabels.map((x,j)=>[j,x]));
+
+function score(name,n){let s=0,c=0;for(let i=0;i<n;i++){const e=document.querySelector(`input[name="${name}${i}"]:checked`);if(e){s+=+e.value;c++}}return{s,c}}
+function updateScores(){
+ const a=score("iief",5),b=score("ipss",7),q=document.querySelector('input[name="qol"]:checked');
+ let ai="Belum lengkap",bi="Belum lengkap";
+ if(a.c===5) ai=a.s<=7?"ED teruk":a.s<=11?"ED sederhana-teruk":a.s<=16?"ED sederhana":a.s<=21?"ED ringan":"Tiada ED / normal";
+ if(b.c===7) bi=b.s<=7?"Ringan":b.s<=19?"Sederhana":"Teruk";
+ document.getElementById("iiefScore").textContent=a.c?`${a.s} / 25`:"0 / 25";
+ document.getElementById("iiefInterpretation").textContent=ai;
+ document.getElementById("ipssScore").textContent=b.c?`${b.s} / 35`:"0 / 35";
+ document.getElementById("ipssInterpretation").textContent=bi;
+ document.getElementById("qolScore").textContent=q?q.value:"—";
+ document.getElementById("qolInterpretation").textContent=q?qolLabels[+q.value].split(" — ")[1]:"Belum dipilih";
+ document.getElementById("sumIief").textContent=a.c===5?a.s:"—";document.getElementById("sumIiefInt").textContent=a.c===5?ai:"—";
+ document.getElementById("sumIpps").textContent=b.c===7?b.s:"—";document.getElementById("sumIppsInt").textContent=b.c===7?bi:"—";
+ document.getElementById("sumQol").textContent=q?q.value:"—";document.getElementById("sumQolInt").textContent=q?qolLabels[+q.value].split(" — ")[1]:"—";
+}
+function showTab(id){
+ document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
+ if(id==="s6")renderPatientList();
+ updateScores();window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.tab)));
+
+const ids=[...document.querySelectorAll("input,select,textarea")].map(x=>x.id).filter(Boolean)
+ .filter(id=>!["newNote","noteType","noteDoctor","patientSearch","importFile"].includes(id));
+
+function getFormData(){
+ const d={};ids.forEach(id=>{const e=document.getElementById(id);if(e)d[id]=e.value});
+ document.querySelectorAll('input[type="radio"]').forEach(r=>{if(r.checked)d[r.name]=r.value});
+ d.notes=JSON.parse(JSON.stringify(additionalNotes));
+ return d;
+}
+function setFormData(d){
+ ids.forEach(id=>{const e=document.getElementById(id);if(e&&d[id]!==undefined)e.value=d[id]});
+ document.querySelectorAll('input[type="radio"]').forEach(r=>r.checked=d[r.name]===r.value);
+ additionalNotes=Array.isArray(d.notes)?d.notes:[];
+ renderNotes();updateScores();
+}
+function clearFormFields(){
+ ids.forEach(id=>{const e=document.getElementById(id);if(e)e.value=""});
+ document.querySelectorAll('input[type="radio"]').forEach(r=>r.checked=false);
+ additionalNotes=[];renderNotes();updateScores();
+ document.getElementById("visitDate").value=new Date().toISOString().slice(0,10);
+}
+document.getElementById("dob").addEventListener("change",function(){
+ if(!this.value)return;const dob=new Date(this.value),today=new Date();let age=today.getFullYear()-dob.getFullYear();
+ const md=today.getMonth()-dob.getMonth();if(md<0||(md===0&&today.getDate()<dob.getDate()))age--;
+ if(age>=0)document.getElementById("age").value=age;
+});
+document.getElementById("doctor").addEventListener("input",function(){const n=document.getElementById("noteDoctor");if(!n.value.trim())n.value=this.value});
+
+function clearNoteInput(){document.getElementById("newNote").value=""}
+function addNote(){
+ const text=document.getElementById("newNote").value.trim();if(!text){alert("Sila masukkan nota terlebih dahulu.");return}
+ const now=new Date();additionalNotes.unshift({
+ id:Date.now(),type:document.getElementById("noteType").value,
+ doctor:document.getElementById("noteDoctor").value.trim()||document.getElementById("doctor").value.trim()||"Tidak dinyatakan",
+ text,date:now.toLocaleDateString("ms-MY"),time:now.toLocaleTimeString("ms-MY",{hour:"2-digit",minute:"2-digit"}),timestamp:now.toISOString()
+ });clearNoteInput();renderNotes();showStatus("✓ Nota ditambah.");
+}
+function renderNotes(){
+ const c=document.getElementById("notesList");document.getElementById("noteCount").textContent=additionalNotes.length;
+ if(!additionalNotes.length){c.innerHTML='<div class="empty">Tiada nota klinikal direkodkan.</div>';return}
+ c.innerHTML=additionalNotes.map(n=>`<div class="note-item">
+ <div class="note-header"><div class="note-meta"><span class="note-type">${esc(n.type)}</span><span class="note-date">${esc(n.date)} · ${esc(n.time)}</span><span class="note-doctor">👨‍⚕️ ${esc(n.doctor)}</span></div></div>
+ <div class="note-content">${esc(n.text)}</div>
+ <div class="note-actions"><button class="btn secondary" onclick="editNote(${n.id})">✏️ Edit</button><button class="btn danger" onclick="deleteNote(${n.id})">🗑️ Padam</button></div>
+ </div>`).join("");
+}
+function editNote(id){
+ const n=additionalNotes.find(x=>x.id===id);if(!n)return;const t=prompt("Edit nota:",n.text);if(t===null)return;if(!t.trim()){alert("Nota tidak boleh kosong.");return}
+ n.text=t.trim();const now=new Date();n.date=now.toLocaleDateString("ms-MY");n.time=now.toLocaleTimeString("ms-MY",{hour:"2-digit",minute:"2-digit"});n.timestamp=now.toISOString();renderNotes();showStatus("✓ Nota dikemaskini.");
+}
+function deleteNote(id){if(!confirm("Padam nota ini?"))return;additionalNotes=additionalNotes.filter(n=>n.id!==id);renderNotes();showStatus("✓ Nota dipadam.");}
+
+function saveDatabase(){
+  // V4: data pesakit disimpan di server database melalui API.
+}
+function patientKey(mrn,name){return (mrn||"").trim().toLowerCase()||("name:"+name.trim().toLowerCase())}
+async 
+function newPatient(){if(confirm("Mulakan rekod pesakit baharu? Data semasa yang belum disimpan akan kekal pada skrin sehingga ditukar.")){clearFormFields();showTab("s1")}}
+async 
+function renderPatientList(){
+ const q=(document.getElementById("patientSearch")?.value||"").toLowerCase().trim();
+ const filtered=database.filter(p=>(p.name+" "+p.mrn).toLowerCase().includes(q));
+ const totalVisits=database.reduce((a,p)=>a+p.visits.length,0),totalNotes=database.reduce((a,p)=>a+p.visits.reduce((b,v)=>b+(v.data.notes?.length||0),0),0);
+ document.getElementById("kpiPatients").textContent=database.length;document.getElementById("kpiVisits").textContent=totalVisits;document.getElementById("kpiNotes").textContent=totalNotes;
+ const dates=database.flatMap(p=>p.visits.map(v=>v.date)).sort();document.getElementById("kpiLast").textContent=dates.length?dates[dates.length-1]:"—";
+ const c=document.getElementById("patientList");
+ if(!filtered.length){c.innerHTML='<div class="empty">Tiada rekod pesakit ditemui.</div>';return}
+ c.innerHTML=filtered.map(p=>`<div class="card" style="margin:12px 0;padding:15px">
+ <div class="patient-row"><div><strong>${esc(p.name)}</strong><br><span class="small">MRN: ${esc(p.mrn||"—")} · ${p.visits.length} lawatan</span></div>
+ <div class="actions" style="margin:0"><button class="btn primary" onclick="showHistory('${esc(p.key)}')">Lihat Sejarah</button><button class="btn danger" onclick="deletePatient('${esc(p.key)}')">Padam</button></div></div>
+ </div>`).join("");
+}
+function showHistory(key){
+ const p=database.find(x=>x.key===key);if(!p)return;document.getElementById("modalTitle").textContent=`Sejarah — ${p.name}`;
+ const h=document.getElementById("patientHistory");
+ h.innerHTML=`<div class="notice">MRN: <b>${esc(p.mrn||"—")}</b> · Telefon: ${esc(p.phone||"—")} · Tarikh lahir: ${esc(p.dob||"—")}</div>`+
+ p.visits.slice().reverse().map(v=>`<div class="card" style="margin:10px 0">
+ <div class="patient-row"><div><strong>Lawatan: ${esc(v.date)}</strong><br><span class="small">Doktor: ${esc(v.doctor||"—")} · IIEF: ${esc(v.data.sumIief||"—")} · IPSS: ${esc(v.data.sumIpps||"—")}</span></div>
+ <button class="btn secondary" onclick="loadVisit('${esc(key)}','${esc(v.id)}');closeModal()">Buka Lawatan</button></div>
+ <div style="margin-top:10px"><b>Diagnosis:</b><br>${esc(v.data.diagnosis||"—")}</div>
+ </div>`).join("");
+ document.getElementById("patientModal").classList.add("show");
+}
+function closeModal(){document.getElementById("patientModal").classList.remove("show")}
+async 
+
+async 
+
+document.getElementById("visitDate").value=new Date().toISOString().slice(0,10);
+document.getElementById("dbStatus").textContent=API_ENABLED?"API dikonfigurasi":"Belum dikonfigurasi";
+renderNotes();updateScores();refreshDatabase();
+</script>
+</div></body>
+</html>
