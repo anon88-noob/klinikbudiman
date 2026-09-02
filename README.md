@@ -1,7 +1,7 @@
 KLINIK BUDIMAN V5 — BACKEND STARTER
 
 Frontend:
-  Klinik_Budiman_V5_Complete_Web_App.html
+  klinikbudiman.html
 
 Production API expected by the frontend:
   POST   /api/auth/login
